@@ -258,6 +258,25 @@ public class StylizeActivity extends CameraActivity implements OnImageAvailableL
     final ArrayList<Button> buttons = new ArrayList<>();
 
     {
+      final Button cameraButton =
+              new Button(StylizeActivity.this) {
+                @Override
+                protected void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec) {
+                  super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+                  setMeasuredDimension(getMeasuredWidth(), getMeasuredWidth());
+                }
+              };
+      cameraButton.setText("swap");
+      cameraButton.setTextSize(12);
+      cameraButton.setOnClickListener(
+              new OnClickListener() {
+                @Override
+                public void onClick(final View v) {
+                  useFrontCamera = !useFrontCamera;
+                  setFragment();
+                }
+              });
+
       final Button sizeButton =
           new Button(StylizeActivity.this) {
             @Override
@@ -307,6 +326,7 @@ public class StylizeActivity extends CameraActivity implements OnImageAvailableL
 
       buttons.add(sizeButton);
       buttons.add(saveButton);
+      buttons.add(cameraButton);
 
       for (int i = 0; i < NUM_STYLES; ++i) {
         LOGGER.v("Creating item %d", i);

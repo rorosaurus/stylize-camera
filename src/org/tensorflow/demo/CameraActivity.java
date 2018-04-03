@@ -67,6 +67,8 @@ public abstract class CameraActivity extends Activity
   protected int previewWidth = 0;
   protected int previewHeight = 0;
 
+  public boolean useFrontCamera = false;
+
   private Runnable postInferenceCallback;
   private Runnable imageConverter;
 
@@ -319,11 +321,18 @@ public abstract class CameraActivity extends Activity
     try {
       for (final String cameraId : manager.getCameraIdList()) {
         final CameraCharacteristics characteristics = manager.getCameraCharacteristics(cameraId);
-
-        // We don't use a front facing camera in this sample.
         final Integer facing = characteristics.get(CameraCharacteristics.LENS_FACING);
-        if (facing != null && facing == CameraCharacteristics.LENS_FACING_FRONT) {
-          continue;
+
+        if (useFrontCamera) { // We do want to use a front facing camera
+          if (facing != null && facing == CameraCharacteristics.LENS_FACING_BACK) {
+            continue;
+          }
+        }
+
+        else { // We don't want to use a front facing camera
+          if (facing != null && facing == CameraCharacteristics.LENS_FACING_FRONT) {
+            continue;
+          }
         }
 
         final StreamConfigurationMap map =
